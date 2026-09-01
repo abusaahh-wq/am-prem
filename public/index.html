@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>WSDQwery · Premium Creator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <!-- Font Awesome 6 (Free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+    
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            overflow-x: hidden;
+        }
+
+        /* ===== LOADING SCREEN ===== */
+        #loadingScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a0a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        #loadingScreen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .loader-spinner {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2.5px solid rgba(255,255,255,0.06);
+            border-top: 2.5px solid #ffffff;
+            animation: spin 0.7s linear infinite;
+            margin-bottom: 1rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loader-text {
+            font-size: 0.7rem;
+            color: #3a3a3a;
+            letter-spacing: 3px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 420px;
+            width: 100%;
+            background: transparent;
+            padding: 0.5rem 0.2rem;
+        }
+
+        /* ===== HEADER ===== */
+        .brand-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            background: #1a1a1a;
+            margin: 0 auto 1rem;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #ffffff;
+            user-select: none;
+            border: 1px solid #222;
+        }
+        .brand-name {
+            text-align: center;
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            color: #ffffff;
+            margin-bottom: 0.15rem;
+        }
+        .brand-sub {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #6a6a6a;
+            font-weight: 400;
+            margin-bottom: 1.8rem;
+            line-height: 1.5;
+        }
+        .brand-sub strong {
+            color: #d0d0d0;
+            font-weight: 600;
+        }
+
+        /* ===== DIVIDER ===== */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin: 1.8rem 0 1.5rem;
+        }
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: #1a1a1a;
+        }
+        .divider-text {
+            font-size: 0.55rem;
+            color: #3a3a3a;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        /* ===== FORM ===== */
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        .form-label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #6a6a6a;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 0.5rem;
+        }
+        .form-label i {
+            margin-right: 0.4rem;
+            color: #4a5a6a;
+        }
+        .form-input {
+            width: 100%;
+            padding: 0.85rem 1.2rem;
+            background: #121212;
+            border: 1px solid #1e1e1e;
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.25s ease;
+            outline: none;
+        }
+        .form-input::placeholder {
+            color: #3a3a3a;
+            font-weight: 400;
+        }
+        .form-input:focus {
+            border-color: #2a2a2a;
+            background: #161616;
+        }
+        .form-input:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn-primary {
+            width: 100%;
+            padding: 0.85rem;
+            border: none;
+            border-radius: 12px;
+            background: #ffffff;
+            color: #0a0a0a;
+            font-size: 0.9rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+        .btn-primary i {
+            margin-right: 0.5rem;
+        }
+        .btn-primary:hover:not(:disabled) {
+            background: #e8e8e8;
+            transform: scale(1.01);
+        }
+        .btn-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-primary .btn-loader {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid rgba(0,0,0,0.1);
+            border-top: 2px solid #0a0a0a;
+            animation: spin 0.6s linear infinite;
+            margin: 0 auto;
+        }
+        .btn-primary.loading .btn-text {
+            display: none;
+        }
+        .btn-primary.loading .btn-loader {
+            display: block;
+        }
+
+        /* ===== STEP 2 ===== */
+        #step2 {
+            display: none;
+            margin-top: 1.5rem;
+            animation: fadeSlideUp 0.4s ease;
+        }
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .magic-link-area {
+            background: #101010;
+            border-radius: 12px;
+            padding: 0.6rem 0.8rem 0.6rem 1rem;
+            border: 1px solid #1a1a1a;
+            margin-bottom: 1rem;
+        }
+        .magic-link-area .form-input {
+            border: none;
+            padding: 0.5rem 0.3rem;
+            background: transparent;
+            font-size: 0.85rem;
+        }
+        .magic-link-area .form-input::placeholder {
+            color: #2a2a2a;
+        }
+        .btn-group {
+            display: flex;
+            gap: 0.6rem;
+        }
+        .btn-group .btn-primary {
+            flex: 1;
+        }
+        .btn-secondary {
+            padding: 0.85rem 1.2rem;
+            border: 1px solid #1e1e1e;
+            border-radius: 12px;
+            background: transparent;
+            color: #4a4a4a;
+            font-size: 0.85rem;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            flex: 0 0 auto;
+            min-width: 52px;
+        }
+        .btn-secondary i {
+            font-size: 1rem;
+        }
+        .btn-secondary:hover {
+            background: #141414;
+            border-color: #2a2a2a;
+            color: #8a8a8a;
+        }
+
+        /* ===== NOTIFICATION ===== */
+        .notification {
+            margin-top: 1.2rem;
+            padding: 0.7rem 1rem;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            line-height: 1.5;
+            min-height: 44px;
+            transition: all 0.3s ease;
+            display: none;
+            background: #111111;
+            border: 1px solid #1a1a1a;
+        }
+        .notification.show {
+            display: block;
+            animation: fadeSlideUp 0.35s ease;
+        }
+        .notification.info {
+            color: #8ab4f8;
+            border-color: #1a2a3a;
+        }
+        .notification.success {
+            color: #7ae0c0;
+            border-color: #1a2a22;
+        }
+        .notification.error {
+            color: #f06a7a;
+            border-color: #2a1a1a;
+        }
+        .notification .notif-icon {
+            margin-right: 0.5rem;
+        }
+        .notification .notif-json {
+            display: block;
+            margin-top: 0.4rem;
+            padding: 0.5rem;
+            background: #080808;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-family: 'Courier New', monospace;
+            color: #4a4a4a;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 130px;
+            overflow-y: auto;
+            border: 1px solid #141414;
+        }
+
+        .docs-trigger {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1.2rem;
+            padding: 0.5rem 1.2rem;
+            background: transparent;
+            border: 1px solid #1a1a1a;
+            border-radius: 30px;
+            color: #6a7a8a;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            font-family: 'Inter', sans-serif;
+        }
+        .docs-trigger:hover {
+            background: #111111;
+            border-color: #2a2a2a;
+            color: #aabbcc;
+        }
+        .docs-trigger i {
+            font-size: 0.9rem;
+        }
+
+        /* ---- MODAL OVERLAY ---- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            display: none;
+            align-items: flex-start;
+            justify-content: center;
+            z-index: 10000;
+            padding: 2rem 1rem;
+            overflow-y: auto;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        /* ---- MODAL BOX ---- */
+        .modal-box {
+            background: #121212;
+            border: 1px solid #1e1e1e;
+            border-radius: 20px;
+            max-width: 480px;
+            width: 100%;
+            padding: 2rem 1.8rem;
+            position: relative;
+            margin: auto 0;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+            animation: slideDown 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+            transform-origin: top center;
+        }
+        @keyframes slideDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-60px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1.2rem;
+            background: transparent;
+            border: none;
+            color: #4a4a4a;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.3s;
+            padding: 0.3rem;
+            line-height: 1;
+        }
+        .modal-close:hover {
+            color: #aabbcc;
+            transform: rotate(90deg);
+        }
+
+        .modal-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #e0e8f0;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .modal-title i {
+            color: #6a8a9a;
+        }
+
+        .modal-step {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+            align-items: flex-start;
+        }
+        .modal-step-number {
+            flex-shrink: 0;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #1a1a1a;
+            color: #6a7a8a;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #252525;
+        }
+        .modal-step-content {
+            font-size: 0.82rem;
+            line-height: 1.6;
+            color: #9aaab8;
+        }
+        .modal-step-content strong {
+            color: #d0d8e0;
+            font-weight: 600;
+        }
+        .modal-step-content .highlight {
+            color: #7ae0c0;
+            font-weight: 500;
+        }
+        .modal-step-content .code-inline {
+            background: #0a0a0a;
+            padding: 0.1rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            color: #b0c8e8;
+            border: 1px solid #1e1e1e;
+        }
+        .modal-step-content i {
+            margin-right: 0.3rem;
+            color: #5a6a7a;
+            width: 1rem;
+            text-align: center;
+        }
+
+        .modal-note {
+            margin-top: 1.2rem;
+            padding: 0.8rem 1rem;
+            background: #0e0e0e;
+            border-radius: 10px;
+            border-left: 3px solid #4a7a6a;
+            font-size: 0.78rem;
+            color: #7a8a9a;
+            line-height: 1.6;
+        }
+        .modal-note i {
+            margin-right: 0.4rem;
+            color: #4a8a7a;
+        }
+        .modal-note strong {
+            color: #b0c8d8;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            margin-top: 1.8rem;
+            text-align: center;
+            font-size: 0.7rem;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+            border-top: 1px solid #161616;
+            padding-top: 1.2rem;
+        }
+        .footer .footer-text {
+            color: #6a7a8a;
+            transition: color 0.3s ease;
+        }
+        .footer .footer-text:hover {
+            color: #aabbcc;
+        }
+        .footer .heart {
+            color: #e8506a;
+            display: inline-block;
+            animation: heartBeat 1.8s ease-in-out infinite;
+        }
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+        .footer .footer-link {
+            color: #7a8aaa;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid transparent;
+        }
+        .footer .footer-link:hover {
+            color: #b0c8e8;
+            border-bottom-color: #4a6a8a;
+        }
+        .footer .footer-divider {
+            color: #2a3a4a;
+            margin: 0 0.4rem;
+        }
+        .footer .footer-version {
+            color: #3a4a5a;
+            font-size: 0.6rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 420px) {
+            .container { padding: 0 0.2rem; }
+            .brand-icon { width: 56px; height: 56px; font-size: 1.3rem; }
+            .brand-name { font-size: 1.4rem; }
+            .brand-sub { font-size: 0.78rem; }
+            .form-input { font-size: 0.88rem; padding: 0.75rem 1rem; }
+            .btn-primary { font-size: 0.85rem; padding: 0.75rem; }
+            .btn-group { flex-direction: column; }
+            .btn-secondary { flex: 1; text-align: center; padding: 0.75rem; }
+            .notification { font-size: 0.78rem; padding: 0.6rem 0.8rem; }
+            .modal-box { padding: 1.5rem 1rem; }
+            .modal-step-content { font-size: 0.78rem; }
+            .footer { font-size: 0.65rem; }
+        }
+        @media (max-width: 340px) {
+            .brand-icon { width: 48px; height: 48px; font-size: 1rem; }
+            .brand-name { font-size: 1.2rem; }
+            .brand-sub { font-size: 0.7rem; }
+            .modal-step { gap: 0.5rem; }
+            .modal-step-number { width: 20px; height: 20px; font-size: 0.6rem; }
+            .footer { font-size: 0.6rem; }
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #1a1a1a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #2a2a2a; }
+    </style>
+</head>
+<body>
+
+    <!-- ===== LOADING SCREEN ===== -->
+    <div id="loadingScreen">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">Loading</div>
+    </div>
+
+    <!-- ===== MODAL OVERLAY ===== -->
+    <div class="modal-overlay" id="docsModal">
+        <div class="modal-box">
+            <button class="modal-close" id="closeDocsModal" aria-label="Tutup panduan">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="modal-title">
+                <i class="fas fa-book-open"></i> Panduan Lengkap
+            </div>
+
+            <!-- Step 1 -->
+            <div class="modal-step">
+                <div class="modal-step-number">1</div>
+                <div class="modal-step-content">
+                    <strong><i class="fas fa-user-plus"></i> Persiapan Email</strong><br />
+                    Gunakan email aktif — bisa <span class="highlight">email kosongan</span> (baru) atau utama. Pastikan bisa mengakses inbox.
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="modal-step">
+                <div class="modal-step-number">2</div>
+                <div class="modal-step-content">
+                    <strong><i class="fas fa-paper-plane"></i> Daftarkan Email</strong><br />
+                    Masukkan email di form atas, klik <span class="highlight">"Kirim Link Verifikasi"</span>. Tunggu notifikasi sukses.
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="modal-step">
+                <div class="modal-step-number">3</div>
+                <div class="modal-step-content">
+                    <strong><i class="fas fa-inbox"></i> Cek Inbox & Spam</strong><br />
+                    Buka email (termasuk folder <span class="highlight">Spam</span> / <span class="highlight">Promosi</span>). Cari subjek <span class="code-inline">Sign in to Alight Creative</span>.
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="modal-step">
+                <div class="modal-step-number">4</div>
+                <div class="modal-step-content">
+                    <strong><i class="fas fa-link"></i> Ambil Magic Link</strong><br />
+                    Di email, <span class="highlight">tahan / klik lama</span> pada teks <span class="code-inline">"Sign in to Alight Creative"</span> atau <span class="code-inline">"Verify Email"</span> → salin URL lengkap (berisi <span class="code-inline">https://alightcreative.com/auth_action/?apiKey=...</span>).
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="modal-step">
+                <div class="modal-step-number">5</div>
+                <div class="modal-step-content">
+                    <strong><i class="fas fa-paste"></i> Tempel Link di Sini</strong><br />
+                    Kembali ke halaman ini, <strong>paste</strong> link di kotak <span class="highlight">"Magic Link"</span>, klik <span class="highlight">"Verifikasi & Aktifkan"</span>.
+                </div>
+            </div>
+
+            <!-- Step 6 -->
+            <div class="modal-step">
+                <div class="modal-step-number">6</div>
+                <div class="modal-step-content">
+                    <strong><i class="fas fa-crown"></i> Selesai! Akun Premium Aktif</strong><br />
+                    Notifikasi hijau muncul. Buka <span class="highlight">Alight Motion</span>, pilih <span class="highlight">Login dengan Google</span>, gunakan email yang sama. <strong>Selamat!</strong>
+                </div>
+            </div>
+
+            <!-- Tips -->
+            <div class="modal-note">
+                <i class="fas fa-lightbulb"></i>
+                <strong>Tips:</strong> Jika link tidak muncul, buka email di browser (bukan aplikasi email) agar link bisa dikopi. Pastikan tidak ada spasi tambahan saat menempel.
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTAINER ===== -->
+    <div class="container" id="appContainer">
+
+        <!-- Brand -->
+        <div class="brand-icon">WQ</div>
+        <h1 class="brand-name">WSDQwery</h1>
+        <p class="brand-sub">
+            <strong>Premium Creator</strong><br />
+            Aktifkan akun premium dalam 2 langkah
+        </p>
+
+        <div class="divider">
+            <span class="divider-line"></span>
+            <span class="divider-text">Verifikasi Email</span>
+            <span class="divider-line"></span>
+        </div>
+
+        <!-- STEP 1: Kirim Email -->
+        <div id="step1">
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-envelope"></i> Alamat Email
+                </label>
+                <input
+                    type="email"
+                    class="form-input"
+                    id="emailInput"
+                    placeholder="Masukkan email Anda..."
+                    value=""
+                />
+            </div>
+            <button class="btn-primary" id="btnSend">
+                <span class="btn-text"><i class="fas fa-paper-plane"></i> Kirim Link Verifikasi</span>
+                <span class="btn-loader"></span>
+            </button>
+        </div>
+
+        <!-- STEP 2: Magic Link -->
+        <div id="step2">
+            <div class="magic-link-area">
+                <input
+                    type="text"
+                    class="form-input"
+                    id="linkInput"
+                    placeholder="Tempel full magic link dari email..."
+                />
+            </div>
+            <div class="btn-group">
+                <button class="btn-primary" id="btnVerify">
+                    <span class="btn-text"><i class="fas fa-check-circle"></i> Verifikasi & Aktifkan</span>
+                    <span class="btn-loader"></span>
+                </button>
+                <button class="btn-secondary" id="btnReset" title="Reset">
+                    <i class="fas fa-undo-alt"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- NOTIFICATION -->
+        <div class="notification" id="notification">
+            <span class="notif-icon" id="notifIcon"><i class="fas fa-circle-info"></i></span>
+            <span id="notifText">Menunggu aksi...</span>
+            <span class="notif-json" id="notifJson"></span>
+        </div>
+
+        <!-- Tombol Docs -->
+        <div style="display:flex; justify-content:center; margin: 0.5rem 0 0.2rem;">
+            <button class="docs-trigger" id="openDocsBtn">
+                <i class="fas fa-book-open"></i> Docs
+            </button>
+        </div>
+
+        <!-- ===== FOOTER ===== -->
+        <div class="footer">
+            <span class="footer-text">
+                Developed
+                by
+                <a href="#" class="footer-link">Dimass</a>
+                <span class="footer-divider">•</span>
+                <span class="footer-version">v2.0</span>
+            </span>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================================
+        // DOM REFS
+        // ==========================================================
+        const loadingScreen = document.getElementById('loadingScreen');
+        const emailInput = document.getElementById('emailInput');
+        const linkInput = document.getElementById('linkInput');
+        const btnSend = document.getElementById('btnSend');
+        const btnVerify = document.getElementById('btnVerify');
+        const btnReset = document.getElementById('btnReset');
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const notification = document.getElementById('notification');
+        const notifIcon = document.getElementById('notifIcon');
+        const notifText = document.getElementById('notifText');
+        const notifJson = document.getElementById('notifJson');
+
+        // Modal elements
+        const docsModal = document.getElementById('docsModal');
+        const openDocsBtn = document.getElementById('openDocsBtn');
+        const closeDocsBtn = document.getElementById('closeDocsModal');
+
+        let currentCookie = '';
+        let currentEmail = '';
+
+        // ==========================================================
+        // LOADING SCREEN
+        // ==========================================================
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+            }, 500);
+        });
+
+        // ==========================================================
+        // MODAL CONTROLS
+        // ==========================================================
+        function openModal() {
+            docsModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            docsModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        openDocsBtn.addEventListener('click', openModal);
+        closeDocsBtn.addEventListener('click', closeModal);
+
+        // Tutup modal saat klik di luar box
+        docsModal.addEventListener('click', (e) => {
+            if (e.target === docsModal) closeModal();
+        });
+
+        // Tutup modal dengan tombol ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && docsModal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+
+        // ==========================================================
+        // NOTIFICATION HELPER
+        // ==========================================================
+        function showNotification(message, type = 'info', jsonData = null) {
+            notification.className = 'notification show ' + type;
+            let icon = 'fa-circle-info';
+            if (type === 'success') icon = 'fa-check-circle';
+            else if (type === 'error') icon = 'fa-exclamation-circle';
+            notifIcon.innerHTML = `<i class="fas ${icon}"></i>`;
+            notifText.textContent = message;
+            notifJson.textContent = '';
+            if (jsonData) {
+                notifJson.textContent = JSON.stringify(jsonData, null, 2);
+            }
+            if (type === 'success' || type === 'error') {
+                clearTimeout(window.notifTimeout);
+                window.notifTimeout = setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 7000);
+            }
+        }
+
+        function hideNotification() {
+            notification.classList.remove('show');
+        }
+
+        // ==========================================================
+        // BUTTON LOADING STATE
+        // ==========================================================
+        function setLoading(btn, loading) {
+            if (loading) {
+                btn.classList.add('loading');
+                btn.disabled = true;
+            } else {
+                btn.classList.remove('loading');
+                btn.disabled = false;
+            }
+        }
+
+        // ==========================================================
+        // STEP 1: SEND VERIFICATION LINK
+        // ==========================================================
+        btnSend.addEventListener('click', async () => {
+            const email = emailInput.value.trim();
+            if (!email || !email.includes('@')) {
+                showNotification('Masukkan alamat email yang valid.', 'error');
+                return;
+            }
+
+            currentEmail = email;
+            hideNotification();
+            setLoading(btnSend, true);
+            showNotification('Mengirim link verifikasi...', 'info');
+
+            try {
+                const res = await fetch('/api/initiate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    currentCookie = data.cookie || '';
+                    showNotification(
+                        `Link verifikasi berhasil dikirim ke ${email}`,
+                        'success'
+                    );
+                    step1.style.display = 'none';
+                    step2.style.display = 'block';
+                    linkInput.placeholder = `Tempel magic link dari ${email}...`;
+                    linkInput.value = '';
+                    btnVerify.classList.remove('loading');
+                    btnVerify.disabled = false;
+                    btnVerify.querySelector('.btn-text').innerHTML = '<i class="fas fa-check-circle"></i> Verifikasi & Aktifkan';
+                } else {
+                    showNotification(data.message || 'Gagal mengirim link', 'error');
+                }
+            } catch (err) {
+                showNotification(`Error: ${err.message}`, 'error');
+            }
+
+            setLoading(btnSend, false);
+        });
+
+        // ==========================================================
+        // STEP 2: VERIFY MAGIC LINK
+        // ==========================================================
+        btnVerify.addEventListener('click', async () => {
+            const link = linkInput.value.trim();
+            if (!link || link.length < 10) {
+                showNotification('Tempel magic link yang valid (minimal 10 karakter).', 'error');
+                return;
+            }
+
+            hideNotification();
+            setLoading(btnVerify, true);
+            showNotification('Memverifikasi magic link...', 'info');
+
+            try {
+                const res = await fetch('/api/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: currentEmail,
+                        link: link,
+                        cookie: currentCookie
+                    })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showNotification(
+                        'Verifikasi berhasil! Akun premium aktif.',
+                        'success',
+                        data.data || null
+                    );
+                    btnVerify.querySelector('.btn-text').innerHTML = '<i class="fas fa-check-double"></i> AKTIF!';
+                    btnVerify.disabled = true;
+                    btnVerify.classList.remove('loading');
+                } else {
+                    showNotification(data.message || 'Verifikasi gagal', 'error');
+                }
+            } catch (err) {
+                showNotification(`Error: ${err.message}`, 'error');
+            }
+
+            if (btnVerify.querySelector('.btn-text').innerHTML !== '<i class="fas fa-check-double"></i> AKTIF!') {
+                setLoading(btnVerify, false);
+            }
+        });
+
+        // ==========================================================
+        // RESET
+        // ==========================================================
+        btnReset.addEventListener('click', () => {
+            step1.style.display = 'block';
+            step2.style.display = 'none';
+            linkInput.value = '';
+            currentCookie = '';
+            currentEmail = '';
+            btnVerify.querySelector('.btn-text').innerHTML = '<i class="fas fa-check-circle"></i> Verifikasi & Aktifkan';
+            btnVerify.disabled = false;
+            btnVerify.classList.remove('loading');
+            hideNotification();
+            showNotification('Reset. Mulai dengan email baru.', 'info');
+        });
+
+        // ==========================================================
+        // ENTER KEY SUPPORT
+        // ==========================================================
+        emailInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') btnSend.click();
+        });
+        linkInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') btnVerify.click();
+        });
+
+        // ==========================================================
+        // INITIAL
+        // ==========================================================
+        showNotification('Siap. Masukkan email untuk memulai.', 'info');
+    </script>
+</body>
+</html>

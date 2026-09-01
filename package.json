@@ -1,0 +1,12 @@
+{
+  "name": "wasdqwerty-creator",
+  "version": "2.0.0",
+  "description": "Premium Creator untuk WSDQwerty",
+  "main": "api/webhook.js",
+  "scripts": {
+    "start": "node api/webhook.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  }
+}
